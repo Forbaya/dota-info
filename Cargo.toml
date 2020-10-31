@@ -1,7 +1,7 @@
 [package]
 name = "dota-info"
 version = "0.1.0"
-authors = ["vilunen"]
+authors = ["Forbaya"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -9,4 +9,5 @@ edition = "2018"
 [dependencies]
 reqwest = { version = "0.10", features = ["json"] }
 tokio = { version = "0.2", features = ["full"] }
-select = "0.5.0"
+serde = { version = "1.0.116", features = ["derive"] }
+serde_json = "1.0.59"

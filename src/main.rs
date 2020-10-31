@@ -1,109 +1,47 @@
-extern crate select;
-use select::document::Document;
-use select::predicate::{Attr};
 use std::collections::HashMap;
+use serde::Deserialize;
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 struct Hero {
+    id: i32,
     name: String,
-    strength: String,
-    agility: String,
-    intelligence: String
+    localized_name: String,
+    primary_attr: String,
+    attack_type: String,
+    roles: Vec<String>,
+    img: String,
+    icon: String,
+    base_health: f32,
+    base_health_regen: Option<f32>,
+    base_mana: i32,
+    base_mana_regen: f32,
+    base_armor: f32,
+    base_mr: i32,
+    base_attack_min: i32,
+    base_attack_max: i32,
+    base_str: i32,
+    base_agi: i32,
+    base_int: i32,
+    str_gain: f32,
+    agi_gain: f32,
+    int_gain: f32,
+    attack_range: i32,
+    projectile_speed: i32,
+    attack_rate: f32,
+    move_speed: i32,
+    turn_rate: f32,
+    cm_enabled: bool,
+    legs: i32
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let heroes = vec![
-        "Abaddon",
-        "Oracle"
-    ];
+    let url = format!("https://api.opendota.com/api/constants/heroes");
+    let res = reqwest::get(&url)
+        .await?;
 
-    let mut hero_data = HashMap::new();
+    let json = res.json::<HashMap<String, Hero>>().await?;
+    println!("{:#?}", json);
 
-    for hero in heroes {
-        let url = format!("https://dota2.gamepedia.com/{}", hero);
-        let data = get_data(&*url).await;
-
-        hero_data.insert(
-            hero,
-            data
-        );
-    }
-
-    for (hero_name, data) in hero_data {
-        let hero = create_hero(String::from(hero_name), data);
-
-        println!("{:#?}", hero);
-    }
-
-
-    Ok(())
-}
-
-fn create_hero(name: String, hero_data: Vec<String>) -> Hero {
-    let strength = String::from(
-        hero_data[1]
-            .split("+")
-            .nth(0)
-            .expect("Could not get the strength data")
-            .trim()
-    );
-
-    let agility = String::from(
-        hero_data[2]
-            .split("+")
-            .nth(0)
-            .expect("Could not get the agility data")
-            .trim()
-    );
-
-    let intelligence = String::from(
-        hero_data[3]
-            .split("+")
-            .nth(0)
-            .expect("Could not get the intelligence data")
-            .trim()
-    );
-
-    Hero {
-        name,
-        strength,
-        agility,
-        intelligence
-    }
-}
-
-async fn get_data(url: &str) -> Vec<String> {
-    let res = reqwest::get(url)
-        .await
-        .expect("Could not get a response");
-
-    let body = res
-        .text()
-        .await
-        .expect("Could not get the body");
-
-    let document = Document::from(&body[..]);
-
-    let node = document
-        .find(Attr("class", "infobox"))
-        .next()
-        .expect("Could not get the node");
-
-    let text = node.text();
-
-    let rows: Vec<&str> = text
-        .split("\n")
-        .collect();
-
-    let filtered_rows: Vec<&str> = rows
-        .iter()
-        .filter(|row| !row.is_empty())
-        .cloned()
-        .collect();
-
-    filtered_rows
-        .into_iter()
-        .map(|s| s.to_string())
-        .collect()
+   Ok(())
 }
