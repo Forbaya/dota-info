@@ -36,6 +36,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-cors"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aaf0c4345c9663a2822d42602391418fd5766f269109ec6bf1784b056a9356a7"
+dependencies = [
+ "actix-web",
+ "derive_more",
+ "futures-util",
+ "log",
+ "once_cell",
+ "tinyvec 1.0.1",
+]
+
+[[package]]
 name = "actix-http"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -537,6 +551,7 @@ checksum = "212d0f5754cb6769937f4501cc0e67f4f4483c8d2c3e1e922ee9edbe4ab4c7c0"
 name = "dota-info"
 version = "0.1.0"
 dependencies = [
+ "actix-cors",
  "actix-web",
  "reqwest",
  "serde",
