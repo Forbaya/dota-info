@@ -1,7 +1,9 @@
+use actix_web::{get, App, HttpServer, Responder, HttpResponse};
 use std::collections::HashMap;
 use serde::Deserialize;
+use std::fmt;
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 struct Hero {
     id: i32,
     name: String,
@@ -34,14 +36,40 @@ struct Hero {
     legs: i32
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+impl fmt::Display for Hero {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.localized_name)
+    }
+}
+
+#[get("/")]
+async fn index() -> impl Responder {
+    let hero_map = get_heroes_map().await.unwrap();
+    let hero_list = hero_map.values().cloned().collect::<Vec<Hero>>();
+    let mut hero_names = "".to_string();
+
+    for hero in hero_list {
+        hero_names.push_str(&*hero.to_string());
+        hero_names.push_str("\n");
+    }
+
+    HttpResponse::Ok().body(hero_names)
+}
+
+async fn get_heroes_map() -> Result<HashMap<String, Hero>, Box<dyn std::error::Error>> {
     let url = format!("https://api.opendota.com/api/constants/heroes");
     let res = reqwest::get(&url)
         .await?;
 
     let json = res.json::<HashMap<String, Hero>>().await?;
-    println!("{:#?}", json);
 
-   Ok(())
+    Ok(json)
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| App::new().service(index))
+        .bind("127.0.0.1:8080")?
+        .run()
+        .await
 }
