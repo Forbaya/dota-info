@@ -1,0 +1,26 @@
+$odd-color: #a5b7d6
+$even-color: #c5d2e8
+$font-color: #181a1c
+
+h1
+  font-size: 45px
+
+table
+  margin-left: 20px
+  border: 1px solid $font-color
+  border-radius: 5px
+
+th
+  background: $odd-color
+  color: $font-color
+  padding: 0
+
+td
+  color: $font-color
+  padding: 0
+
+td:nth-child(2n+1)
+  background: $odd-color
+
+td:nth-child(2n)
+  background: $even-color

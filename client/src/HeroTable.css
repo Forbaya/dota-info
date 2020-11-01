@@ -1,0 +1,30 @@
+h1 {
+  font-size: 45px;
+}
+
+table {
+  margin-left: 20px;
+  border: 1px solid #181a1c;
+  border-radius: 5px;
+}
+
+th {
+  background: #a5b7d6;
+  color: #181a1c;
+  padding: 0;
+}
+
+td {
+  color: #181a1c;
+  padding: 0;
+}
+
+td:nth-child(2n+1) {
+  background: #a5b7d6;
+}
+
+td:nth-child(2n) {
+  background: #c5d2e8;
+}
+
+/*# sourceMappingURL=HeroTable.css.map */
