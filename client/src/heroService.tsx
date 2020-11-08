@@ -12,7 +12,7 @@ export interface IHero {
     img: string
     icon: string
     base_health: number
-    base_health_regen: number | null
+    base_health_regen: number
     base_mana: number
     base_mana_regen: number
     base_armor: number

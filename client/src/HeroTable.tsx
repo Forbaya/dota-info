@@ -1,9 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import heroService, {IHero} from "./heroService";
 import './HeroTable.css'
+import {TableHeader} from "./TableHeader";
+import {getProperty} from "./utilities";
+
+enum EOrder {
+    ASC,
+    DESC
+}
+
+interface ISort {
+    key: keyof IHero
+    order: EOrder
+}
 
 const HeroTable = () => {
     const [heroes, setHeroes] = useState<IHero[]>([])
+    const [sort, setSort] = useState<ISort>({
+        key: 'localized_name' as keyof IHero,
+        order: EOrder.ASC,
+    })
 
     useEffect(() => {
         heroService
@@ -11,35 +27,56 @@ const HeroTable = () => {
             .then(heroes => setHeroes(heroes))
     }, [])
 
+    const sortedHeroes = useMemo((): IHero[] => {
+        let sorted = [...heroes].sort((a, b) => {
+            if (getProperty(a, sort.key) < getProperty(b, sort.key)) {
+                return sort.order === EOrder.ASC ? -1 : 1
+            }
+            if (getProperty(a, sort.key) > getProperty(b, sort.key)) {
+                return sort.order === EOrder.ASC ? 1 : -1
+            }
+            return 0
+        })
+        return sorted
+    }, [heroes, sort])
+
+    const sorter = (key: keyof IHero) => () => {
+        let order = sort.key === key && sort.order === EOrder.ASC
+            ? EOrder.DESC
+            : EOrder.ASC
+
+        setSort({ key, order })
+    }
+
     return (
         <table>
             <thead>
                 <tr>
-                    <th>Hero</th>
-                    <th>Attr</th>
-                    <th>HP</th>
-                    <th>HP/s</th>
-                    <th>MP</th>
-                    <th>MP/s</th>
-                    <th>Armor</th>
-                    <th>Dmg (min)</th>
-                    <th>Dmg (max)</th>
-                    <th>Str</th>
-                    <th>Agi</th>
-                    <th>Int</th>
-                    <th>Str+</th>
-                    <th>Agi+</th>
-                    <th>Int+</th>
-                    <th>AR</th>
-                    <th>PS</th>
-                    <th>BAT</th>
-                    <th>MS</th>
-                    <th>TR</th>
+                    <TableHeader column={"Hero"} property={"localized_name"} sort={sorter}/>
+                    <TableHeader column={"Attr"} property={"primary_attr"} sort={sorter}/>
+                    <TableHeader column={"HP"} property={"base_health"} sort={sorter}/>
+                    <TableHeader column={"HP/s"} property={"base_health_regen"} sort={sorter}/>
+                    <TableHeader column={"MP"} property={"base_mana"} sort={sorter}/>
+                    <TableHeader column={"MP/s"} property={"base_mana_regen"} sort={sorter}/>
+                    <TableHeader column={"Armor"} property={"base_armor"} sort={sorter}/>
+                    <TableHeader column={"Dmg (min)"} property={"base_attack_min"} sort={sorter}/>
+                    <TableHeader column={"Dmg (max)"} property={"base_attack_max"} sort={sorter}/>
+                    <TableHeader column={"Str"} property={"base_str"} sort={sorter}/>
+                    <TableHeader column={"Agi"} property={"base_agi"} sort={sorter}/>
+                    <TableHeader column={"Int"} property={"base_int"} sort={sorter}/>
+                    <TableHeader column={"Str+"} property={"str_gain"} sort={sorter}/>
+                    <TableHeader column={"Agi+"} property={"agi_gain"} sort={sorter}/>
+                    <TableHeader column={"Int+"} property={"int_gain"} sort={sorter}/>
+                    <TableHeader column={"AR"} property={"attack_range"} sort={sorter}/>
+                    <TableHeader column={"PS"} property={"projectile_speed"} sort={sorter}/>
+                    <TableHeader column={"BAT"} property={"attack_rate"} sort={sorter}/>
+                    <TableHeader column={"MS"} property={"move_speed"} sort={sorter}/>
+                    <TableHeader column={"TR"} property={"turn_rate"} sort={sorter}/>
                 </tr>
             </thead>
             <tbody>
-                {heroes.map((hero, index) =>
-                    <tr key={index}>
+                {sortedHeroes.map((hero) =>
+                    <tr key={hero.id}>
                         <td>{hero.localized_name}</td>
                         <td>{hero.primary_attr}</td>
                         <td>{hero.base_health}</td>
