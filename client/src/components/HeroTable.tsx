@@ -1,8 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react'
-import heroService, {IHero} from "./heroService";
-import './HeroTable.css'
+import heroService, {IHero} from "../services/heroService";
+import '../css/HeroTable.css'
 import {TableHeader} from "./TableHeader";
-import {getProperty} from "./utilities";
+import {getProperty} from "../utilities/objectUtility";
 
 enum EOrder {
     ASC,
