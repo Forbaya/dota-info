@@ -10,14 +10,14 @@ enum EOrder {
 }
 
 interface ISort {
-    key: keyof IHero
+    property: keyof IHero
     order: EOrder
 }
 
 const HeroTable = () => {
     const [heroes, setHeroes] = useState<IHero[]>([])
     const [sort, setSort] = useState<ISort>({
-        key: 'localized_name' as keyof IHero,
+        property: 'localized_name' as keyof IHero,
         order: EOrder.ASC,
     })
 
@@ -28,24 +28,25 @@ const HeroTable = () => {
     }, [])
 
     const sortedHeroes = useMemo((): IHero[] => {
-        let sorted = [...heroes].sort((a, b) => {
-            if (getProperty(a, sort.key) < getProperty(b, sort.key)) {
-                return sort.order === EOrder.ASC ? -1 : 1
-            }
-            if (getProperty(a, sort.key) > getProperty(b, sort.key)) {
-                return sort.order === EOrder.ASC ? 1 : -1
-            }
-            return 0
+        return [...heroes].sort((a: IHero, b: IHero) => {
+            const aProperty = getProperty(a, sort.property)
+            const bProperty = getProperty(b, sort.property)
+
+            if (aProperty === bProperty)
+                return 0
+
+            return aProperty < bProperty
+                ? sort.order === EOrder.ASC ? -1 : 1
+                : sort.order === EOrder.ASC ? 1: -1
         })
-        return sorted
     }, [heroes, sort])
 
     const sorter = (key: keyof IHero) => () => {
-        let order = sort.key === key && sort.order === EOrder.ASC
+        let order = sort.property === key && sort.order === EOrder.ASC
             ? EOrder.DESC
             : EOrder.ASC
 
-        setSort({ key, order })
+        setSort({ property: key, order })
     }
 
     return (
