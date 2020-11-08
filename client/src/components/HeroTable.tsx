@@ -14,6 +14,8 @@ interface ISort {
     order: EOrder
 }
 
+type HeroProperty = string | number | boolean | [string]
+
 const HeroTable = () => {
     const [heroes, setHeroes] = useState<IHero[]>([])
     const [sort, setSort] = useState<ISort>({
@@ -29,8 +31,8 @@ const HeroTable = () => {
 
     const sortedHeroes = useMemo((): IHero[] => {
         return [...heroes].sort((a: IHero, b: IHero) => {
-            const aProperty = getProperty(a, sort.property)
-            const bProperty = getProperty(b, sort.property)
+            const aProperty: HeroProperty = getProperty(a, sort.property)
+            const bProperty: HeroProperty = getProperty(b, sort.property)
 
             if (aProperty === bProperty)
                 return 0
@@ -53,26 +55,26 @@ const HeroTable = () => {
         <table>
             <thead>
                 <tr>
-                    <TableHeader column={"Hero"} property={"localized_name"} sort={sorter}/>
-                    <TableHeader column={"Attr"} property={"primary_attr"} sort={sorter}/>
-                    <TableHeader column={"HP"} property={"base_health"} sort={sorter}/>
-                    <TableHeader column={"HP/s"} property={"base_health_regen"} sort={sorter}/>
-                    <TableHeader column={"MP"} property={"base_mana"} sort={sorter}/>
-                    <TableHeader column={"MP/s"} property={"base_mana_regen"} sort={sorter}/>
-                    <TableHeader column={"Armor"} property={"base_armor"} sort={sorter}/>
-                    <TableHeader column={"Dmg (min)"} property={"base_attack_min"} sort={sorter}/>
-                    <TableHeader column={"Dmg (max)"} property={"base_attack_max"} sort={sorter}/>
-                    <TableHeader column={"Str"} property={"base_str"} sort={sorter}/>
-                    <TableHeader column={"Agi"} property={"base_agi"} sort={sorter}/>
-                    <TableHeader column={"Int"} property={"base_int"} sort={sorter}/>
-                    <TableHeader column={"Str+"} property={"str_gain"} sort={sorter}/>
-                    <TableHeader column={"Agi+"} property={"agi_gain"} sort={sorter}/>
-                    <TableHeader column={"Int+"} property={"int_gain"} sort={sorter}/>
-                    <TableHeader column={"AR"} property={"attack_range"} sort={sorter}/>
-                    <TableHeader column={"PS"} property={"projectile_speed"} sort={sorter}/>
-                    <TableHeader column={"BAT"} property={"attack_rate"} sort={sorter}/>
-                    <TableHeader column={"MS"} property={"move_speed"} sort={sorter}/>
-                    <TableHeader column={"TR"} property={"turn_rate"} sort={sorter}/>
+                    <TableHeader column={"Hero"} property={"localized_name"} sortBy={sorter}/>
+                    <TableHeader column={"Attr"} property={"primary_attr"} sortBy={sorter}/>
+                    <TableHeader column={"HP"} property={"base_health"} sortBy={sorter}/>
+                    <TableHeader column={"HP/s"} property={"base_health_regen"} sortBy={sorter}/>
+                    <TableHeader column={"MP"} property={"base_mana"} sortBy={sorter}/>
+                    <TableHeader column={"MP/s"} property={"base_mana_regen"} sortBy={sorter}/>
+                    <TableHeader column={"Armor"} property={"base_armor"} sortBy={sorter}/>
+                    <TableHeader column={"Dmg (min)"} property={"base_attack_min"} sortBy={sorter}/>
+                    <TableHeader column={"Dmg (max)"} property={"base_attack_max"} sortBy={sorter}/>
+                    <TableHeader column={"Str"} property={"base_str"} sortBy={sorter}/>
+                    <TableHeader column={"Agi"} property={"base_agi"} sortBy={sorter}/>
+                    <TableHeader column={"Int"} property={"base_int"} sortBy={sorter}/>
+                    <TableHeader column={"Str+"} property={"str_gain"} sortBy={sorter}/>
+                    <TableHeader column={"Agi+"} property={"agi_gain"} sortBy={sorter}/>
+                    <TableHeader column={"Int+"} property={"int_gain"} sortBy={sorter}/>
+                    <TableHeader column={"AR"} property={"attack_range"} sortBy={sorter}/>
+                    <TableHeader column={"PS"} property={"projectile_speed"} sortBy={sorter}/>
+                    <TableHeader column={"BAT"} property={"attack_rate"} sortBy={sorter}/>
+                    <TableHeader column={"MS"} property={"move_speed"} sortBy={sorter}/>
+                    <TableHeader column={"TR"} property={"turn_rate"} sortBy={sorter}/>
                 </tr>
             </thead>
             <tbody>
